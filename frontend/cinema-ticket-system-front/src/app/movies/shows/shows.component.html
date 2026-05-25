@@ -1,0 +1,5 @@
+@for(show of selectedShows; track show.id) {
+    <div>
+      <app-show [show]="show" (buyTicket)="onBuyTicket($event)"></app-show>
+    </div>
+}

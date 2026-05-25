@@ -1,0 +1,10 @@
+<div class="hall">
+  @for (row of selectedRoom; track row[0]) {
+    <div class="row">
+        Row {{ row[0] }}
+      @for (seat of row[1]; track seat.id) {
+        <app-seat [seat]="seat" (chosenSeat)="onChosenSeat($event)"></app-seat>
+      }
+    </div>
+  }
+</div>

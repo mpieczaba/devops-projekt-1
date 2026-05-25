@@ -1,0 +1,15 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.actions {
+    display: flex;
+    justify-content: center;
+}
+
+button {
+    width: max-content;
+    padding: 10px 20px;
+}
