@@ -3,7 +3,7 @@
     <div class="row">
         Row {{ row[0] }}
       @for (seat of row[1]; track seat.id) {
-        <app-seat [seat]="seat" (chosenSeat)="onChosenSeat($event)"></app-seat>
+        <app-seat [seat]="seat" [selected]="chosenSeats.includes(seat.id)" (chosenSeat)="onChosenSeat($event)"></app-seat>
       }
     </div>
   }

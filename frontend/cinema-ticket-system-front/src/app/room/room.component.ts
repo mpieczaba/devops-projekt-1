@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { DUMMY_ROOMS } from './dummy-rooms';
 import { SeatComponent } from './seat/seat.component';
+import { Show } from '../movies/shows/show/show.model';
 
 @Component({
   selector: 'app-room',
@@ -9,19 +10,20 @@ import { SeatComponent } from './seat/seat.component';
   styleUrl: './room.component.css',
 })
 export class RoomComponent implements OnChanges {
-  @Input({ required: true }) roomId?: number;
+  @Input({ required: true }) show?: Show;
   @Output() seats = new EventEmitter<number[]>();
   dummyRooms = DUMMY_ROOMS;
   chosenSeats: number[] = [];
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['roomId']) {
+    if (changes['show']) {
       this.chosenSeats = [];
+      this.seats.emit([])
     }
   }
 
   get selectedRoom() {
-    const selectedSeats = this.dummyRooms.filter((seat) => seat.room_id === this.roomId);
+    const selectedSeats = this.dummyRooms.filter((seat) => seat.room_id === this.show?.room_id);
 
     const map = new Map<
       number,
@@ -44,7 +46,6 @@ export class RoomComponent implements OnChanges {
     } else {
       this.chosenSeats.push(seatId);
     }
-    console.log(this.chosenSeats);
 
     return this.seats.emit(this.chosenSeats);
   }

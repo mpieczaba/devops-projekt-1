@@ -14,12 +14,12 @@ export class SeatComponent {
     room_id: number;
     reserved: boolean;
   };
+  @Input() selected = false;
   @Output() chosenSeat = new EventEmitter<number>();
 
-  selected = false;
-
   onClicked() {
-    this.selected = !this.selected;
-    this.chosenSeat.emit(this.seat.id);
+    if (!this.seat.reserved) {
+      this.chosenSeat.emit(this.seat.id);
+    }
   }
 }

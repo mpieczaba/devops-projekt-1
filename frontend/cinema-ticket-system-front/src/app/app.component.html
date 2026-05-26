@@ -1,7 +1,7 @@
 <div class="container">
   <app-header></app-header>
   <app-movies (buyTicket)="onBuyTicket($event)"></app-movies>
-  <app-room [roomId]="show?.room_id" (seats)="onSeats($event)"></app-room>
+  <app-room [show]="show" (seats)="onSeats($event)"></app-room>
 
   @if (show?.room_id) {
     <div class="actions">
