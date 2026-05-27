@@ -13,6 +13,7 @@ import java.time.ZoneId;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.condition.EnabledIf;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
@@ -33,6 +34,7 @@ class FixedClockTestConfig {
 }
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@EnabledIf("pl.pwr.cinematicketsystem.integration.PostgresTestContainer#isDockerAvailable")
 @Import(FixedClockTestConfig.class)
 class TicketValidatorIntegrationTest extends AbstractIntegrationTest {
 

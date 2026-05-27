@@ -7,8 +7,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIf;
 import org.springframework.http.MediaType;
 
+@EnabledIf("pl.pwr.cinematicketsystem.integration.PostgresTestContainer#isDockerAvailable")
 class ReservationIntegrationTest extends AbstractIntegrationTest {
 
     @Test
