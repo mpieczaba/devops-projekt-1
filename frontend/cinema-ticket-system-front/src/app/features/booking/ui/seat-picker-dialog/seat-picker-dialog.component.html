@@ -1,0 +1,51 @@
+@if (booking.selectedShow(); as show) {
+  <app-modal-shell ariaLabelledBy="seat-modal-title" (closed)="booking.closeSeatPicker()">
+    <header class="modal-header">
+      <div class="modal-header-text">
+        <h2 id="seat-modal-title">Wybierz miejsca</h2>
+        <div class="show-summary">
+          <time>{{ show.date | date: 'EEEE, d MMMM y · HH:mm' }}</time>
+          <span class="show-summary-room">Sala {{ show.roomId }}</span>
+        </div>
+      </div>
+      <button type="button" class="modal-close" (click)="booking.closeSeatPicker()" aria-label="Zamknij">
+        ×
+      </button>
+    </header>
+
+    <div class="modal-body">
+      <app-seat-map
+        class="embedded"
+        [show]="show"
+        [seats]="booking.seats()"
+        [chosenSeatIds]="booking.chosenSeatIds()"
+        [loading]="booking.seats() === undefined"
+        (seatToggled)="booking.toggleSeat($event)"
+      />
+    </div>
+
+    @if (booking.error()) {
+      <p class="error banner">{{ booking.error() }}</p>
+    }
+
+    <footer class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="booking.closeSeatPicker()">Anuluj</button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        data-testid="confirm-reservation"
+        [disabled]="!booking.chosenSeatIds().length || booking.confirming()"
+        (click)="booking.confirmReservation()"
+      >
+        @if (booking.confirming()) {
+          Rezerwowanie…
+        } @else if (booking.chosenSeatIds().length) {
+          Potwierdź {{ booking.chosenSeatIds().length }}
+          {{ booking.chosenSeatIds().length === 1 ? 'miejsce' : 'miejsc' }}
+        } @else {
+          Wybierz miejsca
+        }
+      </button>
+    </footer>
+  </app-modal-shell>
+}

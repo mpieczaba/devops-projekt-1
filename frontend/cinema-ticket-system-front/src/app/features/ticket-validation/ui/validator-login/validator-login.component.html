@@ -1,0 +1,35 @@
+<form class="login-form" (ngSubmit)="onSubmit()">
+  <label class="field">
+    <span>Login</span>
+    <input
+      type="text"
+      name="username"
+      data-testid="validator-username"
+      [(ngModel)]="username"
+      autocomplete="username"
+      required
+    />
+  </label>
+
+  <label class="field">
+    <span>Hasło</span>
+    <input
+      type="password"
+      name="password"
+      data-testid="validator-password"
+      [(ngModel)]="password"
+      autocomplete="current-password"
+      required
+    />
+  </label>
+
+  @if (error) {
+    <p class="error">{{ error }}</p>
+  }
+
+  <button type="submit" class="btn btn-primary" data-testid="validator-login-submit" [disabled]="loading">
+    {{ loading ? 'Logowanie…' : 'Zaloguj się' }}
+  </button>
+</form>
+
+<p class="hint">Konto testowe: login <strong>a</strong>, hasło <strong>p</strong></p>

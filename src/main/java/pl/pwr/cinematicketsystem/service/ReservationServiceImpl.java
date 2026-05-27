@@ -1,5 +1,7 @@
 package pl.pwr.cinematicketsystem.service;
 
+import static java.util.Optional.ofNullable;
+
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,13 @@ public class ReservationServiceImpl implements ReservationService {
                     "Reservation not found with id: " + id
                 )
             );
+    }
+
+    @Override
+    public Reservation getReservationByCode(String code) {
+        return ofNullable(reservationRepository.findByCode(code)).orElseThrow(() ->
+            new ResourceNotFoundException("Reservation not found with code: " + code)
+        );
     }
 
     @Transactional

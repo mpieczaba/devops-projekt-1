@@ -1,0 +1,19 @@
+@if (booking.reservationCode(); as code) {
+  <app-modal-shell
+    ariaLabelledBy="success-modal-title"
+    variant="success"
+    (closed)="booking.dismissSuccess()"
+  >
+    <div class="reservation-card">
+      <span class="reservation-icon" aria-hidden="true">✓</span>
+      <h2 id="success-modal-title">Rezerwacja potwierdzona</h2>
+      <p class="reservation-hint">
+        Zapisz ten kod — będzie potrzebny przy kasie lub u biletera.
+      </p>
+      <p class="reservation-code" data-testid="reservation-code">{{ code }}</p>
+      <button type="button" class="btn btn-primary reservation-done" (click)="booking.dismissSuccess()">
+        Zamknij
+      </button>
+    </div>
+  </app-modal-shell>
+}

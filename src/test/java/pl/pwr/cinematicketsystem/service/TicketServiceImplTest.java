@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import pl.pwr.cinematicketsystem.domain.ticket.TicketValidityPolicy;
 import pl.pwr.cinematicketsystem.entity.Movie;
 import pl.pwr.cinematicketsystem.entity.Show;
 import pl.pwr.cinematicketsystem.entity.Ticket;
@@ -34,15 +35,23 @@ class TicketServiceImplTest {
     @Mock
     ReservationService reservationService;
 
+    TicketValidityPolicy ticketValidityPolicy = new TicketValidityPolicy();
+
     Clock clock;
 
     TicketServiceImpl ticketService;
 
     @BeforeEach
     void setup() {
-        // default clock, will be overridden per-test
         clock = Clock.fixed(Instant.parse("2026-01-01T12:00:00Z"), ZoneId.of("UTC"));
-        ticketService = new TicketServiceImpl(ticketRepository, showService, seatService, reservationService, clock);
+        ticketService = new TicketServiceImpl(
+            ticketRepository,
+            showService,
+            seatService,
+            reservationService,
+            ticketValidityPolicy,
+            clock
+        );
     }
 
     @Test
@@ -58,7 +67,14 @@ class TicketServiceImplTest {
 
         // set clock to 12:50 UTC => within 15 minutes before show start
         clock = Clock.fixed(Instant.parse("2026-01-01T12:50:00Z"), ZoneId.of("UTC"));
-        ticketService = new TicketServiceImpl(ticketRepository, showService, seatService, reservationService, clock);
+        ticketService = new TicketServiceImpl(
+            ticketRepository,
+            showService,
+            seatService,
+            reservationService,
+            ticketValidityPolicy,
+            clock
+        );
 
         when(ticketRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -80,7 +96,14 @@ class TicketServiceImplTest {
 
         // set clock to 12:44 UTC => more than 15 minutes before (16 minutes before)
         clock = Clock.fixed(Instant.parse("2026-01-01T12:44:00Z"), ZoneId.of("UTC"));
-        ticketService = new TicketServiceImpl(ticketRepository, showService, seatService, reservationService, clock);
+        ticketService = new TicketServiceImpl(
+            ticketRepository,
+            showService,
+            seatService,
+            reservationService,
+            ticketValidityPolicy,
+            clock
+        );
 
         when(ticketRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -102,7 +125,14 @@ class TicketServiceImplTest {
 
         // set clock to 12:00 UTC => after end
         clock = Clock.fixed(Instant.parse("2026-01-01T12:00:00Z"), ZoneId.of("UTC"));
-        ticketService = new TicketServiceImpl(ticketRepository, showService, seatService, reservationService, clock);
+        ticketService = new TicketServiceImpl(
+            ticketRepository,
+            showService,
+            seatService,
+            reservationService,
+            ticketValidityPolicy,
+            clock
+        );
 
         when(ticketRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -124,7 +154,14 @@ class TicketServiceImplTest {
 
         // set clock to within window
         clock = Clock.fixed(Instant.parse("2026-01-01T12:50:00Z"), ZoneId.of("UTC"));
-        ticketService = new TicketServiceImpl(ticketRepository, showService, seatService, reservationService, clock);
+        ticketService = new TicketServiceImpl(
+            ticketRepository,
+            showService,
+            seatService,
+            reservationService,
+            ticketValidityPolicy,
+            clock
+        );
 
         ticketService.updateState(ticket);
 

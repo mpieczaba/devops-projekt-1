@@ -1,6 +1,0 @@
-@for (movie of movies(); track movie.id) {
-  <div class="content">
-    <app-movie [movie]="movie"></app-movie>
-    <app-shows [movieId]="movie.id" (buyTicket)="onBuyTicket($event)"></app-shows>
-  </div>
-}

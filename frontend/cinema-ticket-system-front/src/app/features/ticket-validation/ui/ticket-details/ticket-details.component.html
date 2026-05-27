@@ -1,0 +1,55 @@
+<div class="ticket-card">
+  <div class="ticket-row">
+    <span class="label">Stan biletu</span>
+    <span class="state-badge" [class]="stateClass(info.ticketState)" data-testid="ticket-state">
+      {{ stateLabel(info.ticketState) }}
+    </span>
+  </div>
+
+  <div class="ticket-row">
+    <span class="label">Kod rezerwacji</span>
+    <span>{{ info.reservationCode }}</span>
+  </div>
+
+  <div class="ticket-row">
+    <span class="label">Seans</span>
+    <time>{{ info.showDate | date: 'EEEE, d MMMM y · HH:mm' }}</time>
+  </div>
+
+  <div class="ticket-row">
+    <span class="label">Sala</span>
+    <span>{{ info.roomId }}</span>
+  </div>
+
+  <div class="ticket-row">
+    <span class="label">Liczba miejsc</span>
+    <span>{{ info.numberOfReservedSeats }}</span>
+  </div>
+
+  <div class="ticket-row ticket-row-seats">
+    <span class="label">Numery miejsc</span>
+    <ul class="seat-list">
+      @for (seat of info.reservedSeats; track seat.rowNumber + '-' + seat.seatNumber) {
+        <li>{{ formatSeat(seat) }}</li>
+      }
+    </ul>
+  </div>
+
+  <p class="validity-note">
+    Bilet jest ważny od 15 minut przed seansem do jego zakończenia.
+  </p>
+
+  @if (redeemMessage) {
+    <p class="success">{{ redeemMessage }}</p>
+  }
+
+  <button
+    type="button"
+    class="btn btn-primary redeem-btn"
+    data-testid="redeem-ticket"
+    [disabled]="info.ticketState !== 'VALID' || redeeming"
+    (click)="redeem.emit()"
+  >
+    {{ redeeming ? 'Kasowanie…' : 'Skasuj bilet' }}
+  </button>
+</div>

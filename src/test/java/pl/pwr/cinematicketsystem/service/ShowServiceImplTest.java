@@ -35,12 +35,19 @@ class ShowServiceImplTest {
 
     @Test
     void mapToResponse_includesMovieData() {
-        Movie m = Movie.builder().durationMinutes(120).title("A").description("D").imageUrl("u").build();
-        Show s = new Show(); s.setMovie(m); s.setDate(LocalDateTime.now());
+        Movie m = Movie.builder().id(7).durationMinutes(120).title("A").description("D").imageUrl("u").build();
+        Room room = new Room();
+        room.setId(2);
+        Show s = new Show();
+        s.setId(5);
+        s.setMovie(m);
+        s.setRoom(room);
+        s.setDate(LocalDateTime.now());
         ShowServiceImpl svc = new ShowServiceImpl(showRepository, movieService, roomService, ticketRepository);
         ShowResponse resp = svc.mapToResponse(s);
-        assertEquals(m.getTitle(), resp.getMovieTitle());
-        assertEquals(m.getDurationMinutes(), resp.getDurationMinutes());
+        assertEquals(5, resp.getId());
+        assertEquals(2, resp.getRoomId());
+        assertEquals(7, resp.getMovieId());
     }
 
     @Test

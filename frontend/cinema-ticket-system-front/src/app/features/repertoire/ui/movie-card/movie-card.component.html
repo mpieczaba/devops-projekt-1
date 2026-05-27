@@ -1,0 +1,10 @@
+<div class="movie">
+  <div class="poster-wrap">
+    <img class="poster" [src]="'posters/' + movie.imageUrl" [alt]="movie.title + ' — plakat'" />
+    <span class="duration">{{ movie.durationMinutes }} min</span>
+  </div>
+  <div class="info">
+    <h3 class="title">{{ movie.title }}</h3>
+    <p class="description">{{ movie.description }}</p>
+  </div>
+</div>

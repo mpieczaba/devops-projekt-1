@@ -1,0 +1,12 @@
+<button
+  type="button"
+  class="seat"
+  [attr.data-testid]="'seat-' + seat.seatId"
+  [class.selected]="selected"
+  [class.booked]="seat.reserved"
+  [disabled]="seat.reserved"
+  [attr.aria-label]="'Miejsce ' + seat.seatNumber + (seat.reserved ? ', zajęte' : selected ? ', wybrane' : ', wolne')"
+  (click)="onClick()"
+>
+  {{ seat.seatNumber }}
+</button>

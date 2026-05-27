@@ -10,6 +10,7 @@ import pl.pwr.cinematicketsystem.entity.TicketState;
 @Getter
 public class TicketValidatorResponse {
 
+    private String reservationCode;
     private String ticketCode;
     private TicketState ticketState;
     private Integer numberOfReservedSeats;

@@ -1,0 +1,18 @@
+<div class="shows">
+  <div class="shows-header">
+    <h4 class="shows-title">Seanse</h4>
+    <p class="shows-hint">Wybierz termin i zarezerwuj miejsca</p>
+  </div>
+
+  @if (loading) {
+    <div class="shows-loading">Ładowanie seansów…</div>
+  } @else if (!shows.length) {
+    <p class="shows-empty">Brak zaplanowanych seansów dla tego filmu.</p>
+  } @else {
+    <div class="shows-grid">
+      @for (show of shows; track show.id) {
+        <app-show-card [show]="show" (selected)="showSelected.emit($event)" />
+      }
+    </div>
+  }
+</div>

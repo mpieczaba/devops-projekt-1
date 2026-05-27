@@ -1,0 +1,15 @@
+<div class="show-card">
+  <div class="show-info">
+    <time class="show-date">{{ show.date | date: 'EEE, d MMM' }}</time>
+    <span class="show-time">{{ show.date | date: 'HH:mm' }}</span>
+    <span class="show-room">Sala {{ show.roomId }}</span>
+  </div>
+  <button
+    type="button"
+    class="btn btn-secondary show-btn"
+    data-testid="buy-ticket-btn"
+    (click)="onSelect()"
+  >
+    Kup bilet
+  </button>
+</div>

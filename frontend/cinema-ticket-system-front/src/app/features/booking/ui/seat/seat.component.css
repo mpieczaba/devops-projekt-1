@@ -1,0 +1,52 @@
+.seat {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 8px 8px 4px 4px;
+  background: var(--color-seat);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition), color var(--transition), box-shadow var(--transition);
+  user-select: none;
+}
+
+.seat:hover:not(.booked):not(:disabled) {
+  transform: translateY(-2px);
+  background: var(--color-seat-hover);
+  color: var(--color-text);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.seat.selected {
+  background: var(--color-success);
+  color: #0a1a12;
+  border-color: var(--color-success);
+  box-shadow: 0 0 0 2px var(--color-success-muted);
+}
+
+.seat.booked {
+  background: var(--color-danger-muted);
+  color: rgba(231, 76, 60, 0.7);
+  border-color: rgba(231, 76, 60, 0.35);
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.seat.booked:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+@media (max-width: 640px) {
+  .seat {
+    width: 32px;
+    height: 32px;
+    font-size: 0.625rem;
+  }
+}

@@ -1,9 +1,0 @@
-.content {
-    display: flex;
-    gap: 20px;
-}
-
-app-movie,
-app-shows {
-    flex: 1;
-}

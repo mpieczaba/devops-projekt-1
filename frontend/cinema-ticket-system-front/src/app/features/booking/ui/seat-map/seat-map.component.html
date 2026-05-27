@@ -1,0 +1,41 @@
+<div class="room">
+  @if (loading) {
+    <div class="room-loading">Ładowanie miejsc…</div>
+  } @else if (!rows.length) {
+    <p class="room-empty">Brak miejsc dla tego seansu.</p>
+  } @else {
+    <div class="screen" aria-hidden="true">
+      <span class="screen-label">Ekran</span>
+    </div>
+
+    <div class="legend">
+      <span class="legend-item"><span class="legend-swatch available"></span> Wolne</span>
+      <span class="legend-item"><span class="legend-swatch selected"></span> Wybrane</span>
+      <span class="legend-item"><span class="legend-swatch booked"></span> Zajęte</span>
+    </div>
+
+    <div class="hall">
+      @for (row of rows; track row.rowNumber) {
+        <div class="row">
+          <span class="row-label">{{ row.rowNumber }}</span>
+          <div class="row-seats">
+            @for (seat of row.seats; track seat.seatId) {
+              <app-seat
+                [seat]="seat"
+                [selected]="chosenSeatIds.includes(seat.seatId)"
+                (toggled)="seatToggled.emit($event)"
+              />
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+    @if (chosenSeatIds.length) {
+      <p class="selection-count">
+        {{ chosenSeatIds.length }}
+        {{ chosenSeatIds.length === 1 ? 'miejsce wybrane' : 'miejsc wybranych' }}
+      </p>
+    }
+  }
+</div>

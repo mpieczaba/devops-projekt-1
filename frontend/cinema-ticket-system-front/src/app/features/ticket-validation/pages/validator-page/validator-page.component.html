@@ -1,0 +1,55 @@
+<main class="main">
+  @if (!facade.isLoggedIn()) {
+    <section class="panel">
+      <h2 class="section-title">Logowanie biletera</h2>
+      <p class="section-subtitle">
+        Dostęp do weryfikacji i kasowania biletów wymaga zalogowania.
+      </p>
+      <app-validator-login
+        [error]="facade.loginError()"
+        [loading]="facade.loggingIn()"
+        (submitted)="onLogin($event)"
+      />
+    </section>
+  } @else {
+    <section class="panel">
+      <div class="panel-top">
+        <div>
+          <h2 class="section-title">Weryfikacja biletu</h2>
+          <p class="section-subtitle">Zalogowano jako {{ facade.username() }}</p>
+        </div>
+        <button type="button" class="btn btn-secondary" (click)="onLogout()">Wyloguj</button>
+      </div>
+
+      <form class="lookup-form" (ngSubmit)="onLookup()">
+        <label class="field">
+          <span>Kod rezerwacji</span>
+          <input
+            type="text"
+            name="code"
+            data-testid="reservation-code-input"
+            [(ngModel)]="reservationCode"
+            placeholder="np. RES-a1b2c3d4"
+            required
+          />
+        </label>
+        <button type="submit" class="btn btn-primary" data-testid="lookup-ticket" [disabled]="facade.lookingUp()">
+          {{ facade.lookingUp() ? 'Sprawdzanie…' : 'Sprawdź bilet' }}
+        </button>
+      </form>
+
+      @if (facade.lookupError()) {
+        <p class="error">{{ facade.lookupError() }}</p>
+      }
+
+      @if (facade.ticketInfo(); as info) {
+        <app-ticket-details
+          [info]="info"
+          [redeemMessage]="facade.redeemMessage()"
+          [redeeming]="facade.redeeming()"
+          (redeem)="onRedeem()"
+        />
+      }
+    </section>
+  }
+</main>

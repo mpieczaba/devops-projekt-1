@@ -1,0 +1,12 @@
+<div class="modal-backdrop" (click)="onBackdropClick()" role="presentation">
+  <div
+    class="modal"
+    [class.modal-success]="variant === 'success'"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-labelledby]="ariaLabelledBy"
+    (click)="$event.stopPropagation()"
+  >
+    <ng-content />
+  </div>
+</div>
