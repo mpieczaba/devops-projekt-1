@@ -9,5 +9,6 @@ import { Movie } from './movie.model';
 })
 export class MovieComponent {
   @Input({required: true}) movie!: Movie;
+
   
 }

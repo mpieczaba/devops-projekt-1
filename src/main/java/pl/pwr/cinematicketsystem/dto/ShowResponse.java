@@ -7,10 +7,8 @@ import lombok.Getter;
 @Builder
 @Getter
 public class ShowResponse {
-
+    private Integer id;
     private LocalDateTime date;
-    private Integer durationMinutes;
-    private String movieTitle;
-    private String description;
-    private String imgUrl;
+    private Integer movieId;
+    private Integer roomId;
 }

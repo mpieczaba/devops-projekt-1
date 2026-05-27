@@ -3,9 +3,14 @@
   <app-movies (buyTicket)="onBuyTicket($event)"></app-movies>
   <app-room [show]="show" (seats)="onSeats($event)"></app-room>
 
-  @if (show?.room_id) {
+  @if (show?.roomId) {
     <div class="actions">
       <button (click)="onConfirmSeats()">Confirm seats</button>
     </div>
+  }
+
+  @if (reservationCode()) {
+    <p>Your reservation code:</p>
+    <h2>{{ reservationCode() }}</h2>
   }
 </div>

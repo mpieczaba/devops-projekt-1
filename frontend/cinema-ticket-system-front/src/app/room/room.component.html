@@ -2,8 +2,8 @@
   @for (row of selectedRoom; track row[0]) {
     <div class="row">
         Row {{ row[0] }}
-      @for (seat of row[1]; track seat.id) {
-        <app-seat [seat]="seat" [selected]="chosenSeats.includes(seat.id)" (chosenSeat)="onChosenSeat($event)"></app-seat>
+      @for (seat of row[1]; track seat.seatId) {
+        <app-seat [seat]="seat" [selected]="chosenSeats.includes(seat.seatId)" (chosenSeat)="onChosenSeat($event)"></app-seat>
       }
     </div>
   }

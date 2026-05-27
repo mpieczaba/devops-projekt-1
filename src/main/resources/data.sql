@@ -3,17 +3,17 @@ VALUES
     (1, 'Interstellar',
      'A team of explorers travel through a wormhole in space.',
      169,
-     'interstellar.jpg'),
+     'interstellar.webp'),
 
     (2, 'Inception',
      'A thief enters people dreams to steal secrets.',
      148,
-     'inception.jpg'),
+     'inception.webp'),
 
     (3, 'The Dark Knight',
      'Batman faces the Joker in Gotham City.',
      152,
-     'dark_knight.jpg');
+     'dark_knight.webp');
 
 
 INSERT INTO room(id, name)
@@ -38,12 +38,13 @@ VALUES
     (9, 1, 3, 2),
     (10, 2, 1, 2),
     (11, 2, 2, 2),
-    (12, 2, 3, 2);
+    (12, 2, 3, 2),
+    (13, 2, 4, 2);
 
 
 INSERT INTO show(id, date, movie_id, room_id)
 VALUES
-    (0, NOW(), 1, 1),
+--    (0, NOW(), 1, 1),
     (1, '2026-05-10 18:00:00', 1, 1),
     (2, '2026-05-10 21:00:00', 2, 1),
     (3, '2026-05-11 19:30:00', 3, 2),

@@ -6,7 +6,7 @@ import lombok.Getter;
 @Builder
 @Getter
 public class SeatResponse {
-
+    private Integer seatId;
     private Integer rowNumber;
     private Integer seatNumber;
     private Integer roomId;

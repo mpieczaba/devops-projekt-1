@@ -24,8 +24,8 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth ->
                 auth
-                    .requestMatchers(HttpMethod.GET, "/shows/*/seats")
-                    .hasRole("TICKET_VALIDATOR")
+//                    .requestMatchers(HttpMethod.GET, "/shows/*/seats")
+//                    .hasRole("TICKET_VALIDATOR")
                     .requestMatchers(HttpMethod.GET, "/ticket-validators/info")
                     .hasRole("TICKET_VALIDATOR")
                     .requestMatchers(HttpMethod.GET, "/tickets/valid")

@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Seat } from './seat.model';
 
 @Component({
   selector: 'app-seat',
@@ -7,19 +8,13 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrl: './seat.component.css',
 })
 export class SeatComponent {
-  @Input({ required: true }) seat!: {
-    id: number;
-    row_number: number;
-    seat_number: number;
-    room_id: number;
-    reserved: boolean;
-  };
+  @Input({ required: true }) seat!: Seat;
   @Input() selected = false;
   @Output() chosenSeat = new EventEmitter<number>();
 
   onClicked() {
     if (!this.seat.reserved) {
-      this.chosenSeat.emit(this.seat.id);
+      this.chosenSeat.emit(this.seat.seatId);
     }
   }
 }

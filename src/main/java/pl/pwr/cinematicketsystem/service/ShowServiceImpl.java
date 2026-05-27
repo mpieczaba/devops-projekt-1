@@ -55,11 +55,10 @@ public class ShowServiceImpl implements ShowService {
     @Override
     public ShowResponse mapToResponse(Show show) {
         return ShowResponse.builder()
-            .date(show.getDate())
-            .durationMinutes(show.getMovie().getDurationMinutes())
-            .movieTitle(show.getMovie().getTitle())
-            .description(show.getMovie().getDescription())
-            .imgUrl(show.getMovie().getImageUrl())
+                .id(show.getId())
+                .roomId(show.getRoom().getId())
+                .movieId(show.getMovie().getId())
+                .date(show.getDate())
             .build();
     }
 
@@ -79,6 +78,7 @@ public class ShowServiceImpl implements ShowService {
             .stream()
             .map(seat ->
                 SeatResponse.builder()
+                        .seatId(seat.getId())
                     .rowNumber(seat.getRowNumber())
                     .seatNumber(seat.getSeatNumber())
                     .roomId(seat.getRoom().getId())
