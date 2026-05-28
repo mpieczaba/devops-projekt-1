@@ -35,7 +35,7 @@ export class BookingFacade {
     this.chosenSeatIdsState.set([]);
     this.seatsState.set(undefined);
     this.errorState.set(null);
-    this.scrollLock.lock();
+    this.syncScrollLock();
 
     this.seatRepository.findByShowId(show.id).subscribe({
       next: (seats) => this.seatsState.set(seats),
@@ -88,10 +88,9 @@ export class BookingFacade {
   }
 
   private syncScrollLock(): void {
+    this.scrollLock.reset();
     if (this.isSeatPickerOpen() || this.isSuccessOpen()) {
       this.scrollLock.lock();
-    } else {
-      this.scrollLock.unlock();
     }
   }
 }

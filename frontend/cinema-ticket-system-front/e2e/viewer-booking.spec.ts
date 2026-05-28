@@ -9,8 +9,9 @@ test.describe('Viewer booking', () => {
     await page.getByTestId('buy-ticket-btn').first().click();
     await expect(page.getByRole('heading', { name: 'Wybierz miejsca' })).toBeVisible();
 
-    await page.getByTestId('seat-1').click();
-    await page.getByTestId('seat-2').click();
+    const availableSeats = page.locator('[data-testid^="seat-"]:not([disabled])');
+    await availableSeats.nth(0).click();
+    await availableSeats.nth(1).click();
     await page.getByTestId('confirm-reservation').click();
 
     const code = page.getByTestId('reservation-code');

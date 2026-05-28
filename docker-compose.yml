@@ -19,6 +19,7 @@ services:
       db:
         condition: service_healthy
     environment:
+      TZ: Europe/Warsaw
       DB_URL: jdbc:postgresql://db:5432/cinema
       DB_USER: cinema
       DB_PASS: cinema

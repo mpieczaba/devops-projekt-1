@@ -42,7 +42,9 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .screen {
@@ -104,6 +106,7 @@
 .hall {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 10px;
   width: 100%;
   overflow-x: auto;
@@ -113,6 +116,7 @@
 .row {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
   min-width: max-content;
 }

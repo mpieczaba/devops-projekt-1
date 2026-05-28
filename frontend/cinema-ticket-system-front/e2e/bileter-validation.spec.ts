@@ -1,9 +1,9 @@
 import { expect, test } from '@playwright/test';
-import { createReservation } from './helpers/api';
+import { createValidReservation } from './helpers/api';
 
 test.describe('Bileter validation', () => {
   test('logs in, verifies and redeems a reservation', async ({ page }) => {
-    const reservationCode = await createReservation(2, [3, 4]);
+    const reservationCode = await createValidReservation();
 
     await page.goto('/bileter');
 

@@ -88,4 +88,13 @@ describe('BookingFacade', () => {
     expect(facade.error()).toBe('Rezerwacja nie powiodła się. Spróbuj ponownie.');
     expect(facade.confirming()).toBe(false);
   });
+
+  it('restores body scroll after closing success dialog', () => {
+    facade.openSeatPicker(show);
+    facade.toggleSeat(1);
+    facade.confirmReservation();
+    facade.dismissSuccess();
+
+    expect(document.body.style.overflow).toBe('');
+  });
 });
