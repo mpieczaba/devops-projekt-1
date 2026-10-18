@@ -1,3 +1,12 @@
-#SPDX-License-Identifier: MIT-0
 ---
-# tasks file for ansible/roles/common
+- name: Update APT package cache
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Ensure Ansible prerequisites are installed
+  ansible.builtin.apt:
+    name:
+      - python3-apt
+      - ca-certificates
+    state: present
