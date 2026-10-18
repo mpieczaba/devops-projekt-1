@@ -3,6 +3,11 @@
 
 require "rbconfig"
 
+# Fix port check on MacOS 27
+if RUBY_PLATFORM.include?("darwin")
+  require_relative "utils/skip_port_check"
+end
+
 Vagrant.configure("2") do |config|
   config.vm.box = "bento/ubuntu-24.04"
   config.vm.box_version = "202510.26.0"
@@ -45,6 +50,13 @@ Vagrant.configure("2") do |config|
 
       machine.vm.network "private_network",
         ip: settings[:ip]
+
+      if name == "frontend"
+        machine.vm.network "forwarded_port",
+          guest: 80,
+          host: 8080,
+          host_ip: "127.0.0.1"
+      end
 
       # VirtualBox provider configuration
       machine.vm.provider "virtualbox" do |virtualbox|

@@ -1,3 +1,68 @@
-#SPDX-License-Identifier: MIT-0
 ---
-# tasks file for ansible/roles/frontend
+- name: Install Nginx
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+    update_cache: true
+
+- name: Create frontend web root
+  ansible.builtin.file:
+    path: "{{ frontend_web_root }}"
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: "0755"
+
+- name: Deploy Angular build
+  ansible.builtin.copy:
+    src: "{{ frontend_dist_source }}/"
+    dest: "{{ frontend_web_root }}/"
+    owner: www-data
+    group: www-data
+    mode: "0644"
+  notify: Reload Nginx
+
+- name: Remove default Nginx site
+  ansible.builtin.file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: Reload Nginx
+
+- name: Configure cinema frontend
+  ansible.builtin.template:
+    src: cinema-frontend.conf.j2
+    dest: /etc/nginx/sites-available/cinema-frontend.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Reload Nginx
+
+- name: Enable cinema frontend site
+  ansible.builtin.file:
+    src: /etc/nginx/sites-available/cinema-frontend.conf
+    dest: /etc/nginx/sites-enabled/cinema-frontend.conf
+    state: link
+  notify: Reload Nginx
+
+- name: Allow HTTP traffic from private network
+  community.general.ufw:
+    rule: allow
+    direction: in
+    from_ip: 192.168.105.0/24
+    to_port: "{{ frontend_port }}"
+    proto: tcp
+
+- name: Allow HTTP traffic from Vagrant NAT
+  community.general.ufw:
+    rule: allow
+    direction: in
+    from_ip: 10.0.2.0/24
+    to_port: "{{ frontend_port }}"
+    proto: tcp
+
+- name: Ensure Nginx is enabled and running
+  ansible.builtin.systemd:
+    name: nginx
+    enabled: true
+    state: started
+    daemon_reload: true

@@ -20,7 +20,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor])),
-    { provide: API_BASE_URL, useValue: 'http://localhost:8080' },
+    { provide: API_BASE_URL, useValue: '/api' },
     { provide: MovieRepository, useClass: HttpMovieRepository },
     { provide: ShowRepository, useClass: HttpShowRepository },
     { provide: SeatRepository, useClass: HttpSeatRepository },
