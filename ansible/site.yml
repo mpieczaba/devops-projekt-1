@@ -1,5 +1,25 @@
 ---
-- name: Example playbook
-  hosts: localhost
+- name: Configure common settings
+  hosts: all
+  become: true
   roles:
-    - role: cinema_ticket_system.infra.run
+    - common
+    - security
+
+- name: Configure database server
+  hosts: db_servers
+  become: true
+  roles:
+    - database
+
+- name: Configure backend server
+  hosts: backend_servers
+  become: true
+  roles:
+    - backend
+
+- name: Configure frontend server
+  hosts: frontend_servers
+  become: true
+  roles:
+    - frontend

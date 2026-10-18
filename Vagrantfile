@@ -1,18 +1,59 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# All Vagrant configuration is done below. The "2" in Vagrant.configure
-# configures the configuration version (we support older styles for
-# backwards compatibility). Please don't change it unless you know what
-# you're doing.
-Vagrant.configure("2") do |config|
-  # The most common configuration options are documented and commented below.
-  # For a complete reference, please see the online documentation at
-  # https://docs.vagrantup.com.
+require "rbconfig"
 
-  # Every Vagrant development environment requires a box. You can search for
-  # boxes at https://vagrantcloud.com/search.
-  config.vm.box = "base"
+Vagrant.configure("2") do |config|
+  config.vm.box = "bento/ubuntu-24.04"
+  config.vm.box_version = "202510.26.0"
+  config.vm.box_architecture = :auto
+  config.vm.box_check_update = false
+
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "ansible/site.yml"
+    ansible.compatibility_mode = "2.0"
+
+    ansible.groups = {
+      "db_servers" => ["db"],
+      "backend_servers" => ["backend"],
+      "frontend_servers" => ["frontend"]
+    }
+  end
+
+  machines = {
+    "db" => {
+      ip: "192.168.105.10",
+      memory: 2048,
+      cpus: 2
+    },
+    "backend" => {
+      ip: "192.168.105.11",
+      memory: 2048,
+      cpus: 2
+    },
+    "frontend" => {
+      ip: "192.168.105.12",
+      memory: 1024,
+      cpus: 1
+    }
+  }
+
+  machines.each do |name, settings|
+    config.vm.define name do |machine|
+      machine.vm.hostname = name
+
+      machine.vm.network "private_network",
+        ip: settings[:ip]
+
+      # VirtualBox provider configuration
+      machine.vm.provider "virtualbox" do |virtualbox|
+        virtualbox.name = "cinema-#{name}"
+        virtualbox.memory = settings[:memory]
+        virtualbox.cpus = settings[:cpus]
+        virtualbox.gui = false
+      end
+    end
+  end
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
