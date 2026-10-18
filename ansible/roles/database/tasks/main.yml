@@ -1,3 +1,53 @@
-#SPDX-License-Identifier: MIT-0
 ---
-# tasks file for ansible/roles/database
+- name: Install PostgreSQL
+  ansible.builtin.apt:
+    name:
+      - postgresql
+      - postgresql-contrib
+      - python3-psycopg2
+    state: present
+    update_cache: true
+
+- name: Ensure PostgreSQL is enabled and running
+  ansible.builtin.service:
+    name: postgresql
+    state: started
+    enabled: true
+
+- name: Configure PostgreSQL listen address
+  ansible.builtin.lineinfile:
+    path: "/etc/postgresql/{{ postgres_version }}/main/postgresql.conf"
+    regexp: '^#?listen_addresses\s*='
+    line: "listen_addresses = '{{ postgres_bind_address }}'"
+  notify: Restart PostgreSQL
+
+- name: Allow backend to connect to PostgreSQL
+  ansible.builtin.lineinfile:
+    path: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+    insertafter: EOF
+    line: "host {{ postgres_db_name }} {{ postgres_db_user }} {{ postgres_backend_ip }}/32 scram-sha-256"
+  notify: Restart PostgreSQL
+
+- name: Create PostgreSQL user
+  become_user: postgres
+  community.postgresql.postgresql_user:
+    name: "{{ postgres_db_user }}"
+    password: "{{ postgres_db_password }}"
+    encrypted: true
+    state: present
+  no_log: true
+
+- name: Create application database
+  become_user: postgres
+  community.postgresql.postgresql_db:
+    name: "{{ postgres_db_name }}"
+    owner: "{{ postgres_db_user }}"
+    state: present
+
+- name: Allow PostgreSQL only from backend
+  community.general.ufw:
+    rule: allow
+    direction: in
+    from_ip: "{{ postgres_backend_ip }}"
+    to_port: "5432"
+    proto: tcp
