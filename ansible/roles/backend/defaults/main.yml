@@ -1,3 +1,14 @@
-#SPDX-License-Identifier: MIT-0
 ---
-# defaults file for ansible/roles/backend
+backend_app_name: cinema-tickets-system
+backend_app_user: cinema
+backend_app_dir: /opt/cinema
+backend_jar_source: "{{ playbook_dir }}/../target/cinema-tickets-system-0.0.1-SNAPSHOT.jar"
+backend_jar_path: "/opt/cinema/cinema-tickets-system.jar"
+backend_env_path: /etc/cinema/backend.env
+backend_service_name: cinema-backend
+
+backend_port: 8080
+backend_db_host: 192.168.105.10
+backend_db_name: cinema
+backend_db_user: cinema
+backend_frontend_ip: 192.168.105.12

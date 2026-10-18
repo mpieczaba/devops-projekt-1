@@ -1,0 +1,17 @@
+[Unit]
+Description=Cinema Tickets Spring Boot Backend
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User={{ backend_app_user }}
+Group={{ backend_app_user }}
+WorkingDirectory={{ backend_app_dir }}
+EnvironmentFile={{ backend_env_path }}
+ExecStart=/usr/bin/java -jar {{ backend_jar_path }}
+Restart=on-failure
+RestartSec=5
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target
