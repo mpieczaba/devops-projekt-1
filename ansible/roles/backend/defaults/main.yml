@@ -8,7 +8,7 @@ backend_env_path: /etc/cinema/backend.env
 backend_service_name: cinema-backend
 
 backend_port: 8080
-backend_db_host: 192.168.105.10
+backend_db_host: 192.168.56.10
 backend_db_name: cinema
 backend_db_user: cinema
-backend_frontend_ip: 192.168.105.12
+backend_frontend_ip: 192.168.56.12

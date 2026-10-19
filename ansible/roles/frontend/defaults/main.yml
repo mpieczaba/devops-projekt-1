@@ -1,6 +1,6 @@
 ---
 frontend_dist_source: "{{ playbook_dir }}/../frontend/cinema-ticket-system-front/dist/cinema-ticket-system-front/browser"
 frontend_web_root: /var/www/cinema
-frontend_backend_ip: 192.168.105.11
+frontend_backend_ip: 192.168.56.11
 frontend_backend_port: 8080
 frontend_port: 80

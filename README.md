@@ -4,9 +4,9 @@ Projekt uruchamia system biletów kinowych na trzech maszynach wirtualnych:
 
 | VM | Adres prywatny | Rola |
 |---|---|---|
-| `db` | `192.168.105.10` | PostgreSQL |
-| `backend` | `192.168.105.11` | Spring Boot |
-| `frontend` | `192.168.105.12` | Angular + Nginx |
+| `db` | `192.168.56.10` | PostgreSQL |
+| `backend` | `192.168.56.11` | Spring Boot |
+| `frontend` | `192.168.56.12` | Angular + Nginx |
 
 Komunikacja między maszynami odbywa się przez prywatną sieć VirtualBox.
 Frontend jest dodatkowo dostępny z komputera hosta pod adresem
@@ -163,7 +163,7 @@ curl http://localhost:8080
 
 Można też wejść w przeglądarce na `http://localhost:8080`. Bez
 przekierowania portu frontend jest dostępny bezpośrednio w prywatnej sieci
-pod adresem `http://192.168.105.12`.
+pod adresem `http://192.168.56.12`.
 
 Przykładowa weryfikacja backendu z poziomu maszyny `backend`:
 

@@ -28,17 +28,17 @@ Vagrant.configure("2") do |config|
 
   machines = {
     "db" => {
-      ip: "192.168.105.10",
+      ip: "192.168.56.10",
       memory: 2048,
       cpus: 2
     },
     "backend" => {
-      ip: "192.168.105.11",
+      ip: "192.168.56.11",
       memory: 2048,
       cpus: 2
     },
     "frontend" => {
-      ip: "192.168.105.12",
+      ip: "192.168.56.12",
       memory: 1024,
       cpus: 1
     }

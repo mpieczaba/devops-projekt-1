@@ -1,6 +1,6 @@
 ---
 postgres_version: "16"
-postgres_bind_address: "192.168.105.10"
+postgres_bind_address: "192.168.56.10"
 postgres_db_name: "cinema"
 postgres_db_user: "cinema"
-postgres_backend_ip: "192.168.105.11"
+postgres_backend_ip: "192.168.56.11"
