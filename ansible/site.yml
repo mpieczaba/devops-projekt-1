@@ -2,8 +2,20 @@
 - name: Configure common settings
   hosts: all
   become: true
+  pre_tasks:
+    # Shared dependencies (python3-apt, acl, ufw...) come from the Packer image;
+    # without it the rest of the playbook would fail.
+    - name: Check that the machine was created from the Packer base image
+      ansible.builtin.stat:
+        path: /etc/cinema-base-image
+      register: base_image_marker
+
+    - name: Fail early when the Packer base image is missing
+      ansible.builtin.assert:
+        that: base_image_marker.stat.exists
+        fail_msg: "{{ inventory_hostname }} was not created from the cinema/ubuntu-24.04-base box (run make box)"
+        quiet: true
   roles:
-    - common
     - security
 
 - name: Configure database server

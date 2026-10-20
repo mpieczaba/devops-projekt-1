@@ -34,3 +34,9 @@ build/
 
 ### Vagrant ###
 .vagrant/
+
+### Packer ###
+packer/output/
+packer_cache/
+crash.log
+*.box

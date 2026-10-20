@@ -49,16 +49,6 @@
   no_log: true
   notify: Restart backend
 
-- name: Create backend environment file
-  ansible.builtin.template:
-    src: backend.env.j2
-    dest: "{{ backend_env_path }}"
-    owner: root
-    group: root
-    mode: "0600"
-  no_log: true
-  notify: Restart backend
-
 - name: Allow backend traffic from frontend
   community.general.ufw:
     rule: allow

@@ -9,13 +9,16 @@ if RUBY_PLATFORM.include?("darwin")
 end
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "bento/ubuntu-24.04"
-  config.vm.box_version = "202510.26.0"
+  # local box built via Packer based on bento/ubuntu-24.04. To build and add to Vagrant use make box
+  config.vm.box = ENV.fetch("CINEMA_BOX", "cinema/ubuntu-24.04-base")
   config.vm.box_architecture = :auto
   config.vm.box_check_update = false
 
+  config.vm.boot_timeout = 900
+
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "ansible/site.yml"
+    ansible.config_file = "ansible/ansible.cfg"
     ansible.compatibility_mode = "2.0"
     ansible.ask_vault_pass = true
 
@@ -62,7 +65,7 @@ Vagrant.configure("2") do |config|
       machine.vm.provider "virtualbox" do |virtualbox|
         virtualbox.name = "cinema-#{name}"
         virtualbox.memory = settings[:memory]
-        virtualbox.cpus = settings[:cpus]
+        virtualbox.cpus = ENV.fetch("CINEMA_VM_CPUS", settings[:cpus]).to_i
         virtualbox.gui = false
       end
     end

@@ -1,0 +1,141 @@
+---
+# Read-only checks of SSH hardening, firewall rules and service reachability.
+#
+#   make verify
+#
+# Kept outside ansible/ so the encrypted group_vars/all/vault.yml is not loaded.
+# Every "blocked" probe is paired with an "open" SSH probe between the same
+# machines, so a blocked result means the firewall dropped it, not a dead network.
+
+- name: Verify SSH hardening and firewall state
+  hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Read effective sshd configuration
+      ansible.builtin.command: sshd -T
+      register: sshd_effective
+      changed_when: false
+
+    - name: Assert root login over SSH is disabled
+      ansible.builtin.assert:
+        that: "'permitrootlogin no' in sshd_effective.stdout_lines"
+        fail_msg: "Root SSH login is enabled"
+        success_msg: "PermitRootLogin no"
+
+    - name: Read UFW status
+      ansible.builtin.command: ufw status verbose
+      register: ufw_status
+      changed_when: false
+
+    - name: Assert UFW is active and denies incoming traffic by default
+      ansible.builtin.assert:
+        that:
+          - "'Status: active' in ufw_status.stdout"
+          - "'deny (incoming)' in ufw_status.stdout"
+        fail_msg: "UFW inactive or default incoming policy is not deny"
+        success_msg: "UFW active, default deny (incoming)"
+
+- name: Verify PostgreSQL listens only on the private interface
+  hosts: db_servers
+  become: true
+  gather_facts: false
+  tasks:
+    - name: List PostgreSQL listening sockets
+      ansible.builtin.command: ss -Hltn sport = :5432
+      register: pg_sockets
+      changed_when: false
+
+    - name: Assert PostgreSQL does not listen on all interfaces
+      ansible.builtin.assert:
+        that:
+          - pg_sockets.stdout | length > 0
+          - "'0.0.0.0:5432' not in pg_sockets.stdout"
+          - "'*:5432' not in pg_sockets.stdout"
+        fail_msg: "PostgreSQL listening sockets: {{ pg_sockets.stdout }}"
+        success_msg: "Listening on {{ pg_sockets.stdout | regex_search('\\S+:5432') }}"
+
+- name: Verify network access between machines
+  hosts: all
+  gather_facts: false
+  vars:
+    cinema_private_ips:
+      db: 192.168.56.10
+      backend: 192.168.56.11
+      frontend: 192.168.56.12
+    connectivity_matrix:
+      - { from: frontend, to: backend, port: 8080, open: true }
+      - { from: frontend, to: db, port: 22, open: true }
+      - { from: frontend, to: db, port: 5432, open: false }
+      - { from: backend, to: db, port: 5432, open: true }
+      - { from: backend, to: frontend, port: 80, open: true }
+      - { from: db, to: backend, port: 22, open: true }
+      - { from: db, to: backend, port: 8080, open: false }
+  tasks:
+    - name: Probe TCP connectivity to other machines
+      ansible.builtin.command:
+        argv:
+          - python3
+          - -c
+          - "import socket, sys; socket.create_connection((sys.argv[1], int(sys.argv[2])), timeout=3).close()"
+          - "{{ cinema_private_ips[item.to] }}"
+          - "{{ item.port | string }}"
+      loop: "{{ connectivity_matrix | selectattr('from', 'equalto', inventory_hostname) | list }}"
+      loop_control:
+        label: "{{ item.from }} -> {{ item.to }}:{{ item.port }} ({{ 'open' if item.open else 'blocked' }})"
+      register: probe
+      changed_when: false
+      failed_when: (probe.rc == 0) != item.open
+
+- name: Verify access from the host machine
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    host_matrix:
+      - { host: 192.168.56.12, port: 80, open: true }
+      - { host: 192.168.56.11, port: 22, open: true }
+      - { host: 192.168.56.11, port: 8080, open: false }
+      - { host: 192.168.56.10, port: 22, open: true }
+      - { host: 192.168.56.10, port: 5432, open: false }
+  tasks:
+    - name: Check the application through the forwarded port
+      ansible.builtin.uri:
+        url: "{{ item }}"
+        status_code: 200
+      loop:
+        - http://127.0.0.1:8080/
+        - http://127.0.0.1:8080/api/movies
+
+    # The controller may have no route to the host-only network (e.g. WSL2);
+    # in that case host-side probes would prove nothing, so they are skipped.
+    - name: Check whether the host can reach the private network
+      ansible.builtin.command:
+        argv:
+          - "{{ ansible_playbook_python }}"
+          - -c
+          - "import socket; socket.create_connection(('192.168.56.12', 80), timeout=3).close()"
+      register: private_net_probe
+      changed_when: false
+      failed_when: false
+
+    - name: Report skipped host-side probes
+      ansible.builtin.debug:
+        msg: "No route to 192.168.56.0/24 from the controller, host-side probes skipped"
+      when: private_net_probe.rc != 0
+
+    - name: Probe TCP connectivity from the host
+      ansible.builtin.command:
+        argv:
+          - "{{ ansible_playbook_python }}"
+          - -c
+          - "import socket, sys; socket.create_connection((sys.argv[1], int(sys.argv[2])), timeout=3).close()"
+          - "{{ item.host }}"
+          - "{{ item.port | string }}"
+      loop: "{{ host_matrix }}"
+      loop_control:
+        label: "host -> {{ item.host }}:{{ item.port }} ({{ 'open' if item.open else 'blocked' }})"
+      register: probe
+      changed_when: false
+      failed_when: (probe.rc == 0) != item.open
+      when: private_net_probe.rc == 0

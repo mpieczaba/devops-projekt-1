@@ -1,2 +1,12 @@
+# Uniform LF syntax instead of CRLF
+* text=auto eol=lf
+
 /mvnw text eol=lf
+*.sh text eol=lf
 *.cmd text eol=crlf
+
+*.png binary
+*.webp binary
+*.jpg binary
+*.ico binary
+*.box binary
