@@ -2,7 +2,7 @@
 - name: Install Nginx
   ansible.builtin.apt:
     name: nginx
-    state: present
+    state: current
     update_cache: true
 
 - name: Create frontend web root

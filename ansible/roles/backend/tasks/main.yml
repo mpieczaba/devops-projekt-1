@@ -3,7 +3,7 @@
   ansible.builtin.apt:
     name:
       - openjdk-21-jre-headless
-    state: present
+    state: current
     update_cache: true
 
 - name: Create backend system user

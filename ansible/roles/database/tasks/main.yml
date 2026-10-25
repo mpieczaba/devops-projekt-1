@@ -5,7 +5,7 @@
       - postgresql
       - postgresql-contrib
       - python3-psycopg2
-    state: present
+    state: current
     update_cache: true
 
 - name: Ensure PostgreSQL is enabled and running
@@ -35,7 +35,7 @@
     name: "{{ postgres_db_user }}"
     password: "{{ postgres_db_password }}"
     encrypted: true
-    state: present
+    state: current
   no_log: true
 
 - name: Create application database
@@ -44,7 +44,7 @@
   community.postgresql.postgresql_db:
     name: "{{ postgres_db_name }}"
     owner: "{{ postgres_db_user }}"
-    state: present
+    state: current
 
 - name: Allow PostgreSQL only from backend
   community.general.ufw:

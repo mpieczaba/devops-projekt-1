@@ -4,7 +4,7 @@
 - name: Ensure UFW is installed
   ansible.builtin.apt:
     name: ufw
-    state: present
+    state: current
 
 - name: Allow SSH access
   community.general.ufw:
